@@ -4,20 +4,59 @@ import { PlayerCard } from "./PlayerCard";
 import { QuestionBox } from "./QuestionBox";
 import { ResultOverlay } from "./ResultOverlay";
 import { DarkModeToggle } from "./DarkModeToggle";
+import { OnboardingModal } from "./OnboardingModal";
+import { GameSettings } from "./GameSettings";
 import { soundManager } from "@/utils/sounds";
+import { useState, useEffect } from "react";
+import { Settings } from "lucide-react";
 
 export function GameContainer() {
-  const { state, startGame, submitAnswer } = useGameState();
+  const [initialSettings, setInitialSettings] = useState<any>(null);
+  const { state, startGame, submitAnswer, currentSettings, updateSettings } = useGameState(initialSettings);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+
+  useEffect(() => {
+    // Load settings from localStorage on mount
+    const savedSettings = localStorage.getItem('gameSettings');
+    if (savedSettings) {
+      try {
+        const parsed = JSON.parse(savedSettings);
+        setInitialSettings(parsed);
+      } catch (error) {
+        console.error('Failed to load settings:', error);
+      }
+    }
+
+    const hasSeenOnboarding = localStorage.getItem('hasSeenOnboarding');
+    if (!hasSeenOnboarding) {
+      setShowOnboarding(true);
+    }
+  }, []);
 
   const handleStart = () => {
     soundManager.play('button');
     startGame();
   };
 
+  const handleSettingsChange = (settings: any) => {
+    updateSettings(settings);
+  };
+
   if (state.phase === "waiting") {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-6 p-4">
-        <DarkModeToggle />
+        <div className="absolute top-4 right-4 flex gap-2">
+          <DarkModeToggle />
+          <motion.button
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setShowSettings(true)}
+            className="p-2 rounded-lg bg-muted hover:bg-muted/80 transition-colors"
+          >
+            <Settings className="h-5 w-8" />
+          </motion.button>
+        </div>
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
@@ -49,6 +88,18 @@ export function GameContainer() {
         >
           🎮 Start Battle!
         </motion.button>
+        
+        <OnboardingModal 
+          isOpen={showOnboarding} 
+          onClose={() => setShowOnboarding(false)}
+          onOpenSettings={() => setShowSettings(true)}
+        />
+        
+        <GameSettings 
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+          onSettingsChange={handleSettingsChange}
+        />
       </div>
     );
   }
@@ -86,6 +137,8 @@ export function GameContainer() {
           feedback={state.feedbackPlayer === 1 ? state.feedback : null}
           isTarget={state.feedbackPlayer === 2 && state.question?.type === "attack"}
           questionType={state.feedbackPlayer === 1 ? state.question?.type ?? null : null}
+          playerName={currentSettings.player1Name}
+          playerAvatar={currentSettings.player1Avatar}
         />
 
 
@@ -101,6 +154,8 @@ export function GameContainer() {
           feedback={state.feedbackPlayer === 2 ? state.feedback : null}
           isTarget={state.feedbackPlayer === 1 && state.question?.type === "attack"}
           questionType={state.feedbackPlayer === 2 ? state.question?.type ?? null : null}
+          playerName={currentSettings.player2Name}
+          playerAvatar={currentSettings.player2Avatar}
         />
       </div>
     </div>

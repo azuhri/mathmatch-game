@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { soundManager } from "@/utils/sounds";
+import { GameSettingsData } from "@/components/game/GameSettings";
 
 export type QuestionType = "attack" | "heal" | "shield";
 export type Player = 1 | 2;
@@ -75,12 +76,20 @@ function generateQuestion(): Question {
   return { text: text!, answer: answer!, type, value: values[type] };
 }
 
-export function useGameState() {
+export function useGameState(settings?: GameSettingsData) {
+  const [currentSettings, setCurrentSettings] = useState<GameSettingsData>(settings || {
+    timerDuration: 6,
+    player1Name: "Player 1",
+    player2Name: "Player 2",
+    player1Avatar: null,
+    player2Avatar: null,
+  });
+
   const [state, setState] = useState<GameState>({
     hp: [MAX_HP, MAX_HP],
     maxHp: [MAX_HP, MAX_HP],
     question: null,
-    timer: TIMER_DURATION,
+    timer: currentSettings.timerDuration,
     combo: [0, 0],
     phase: "waiting",
     winner: null,
@@ -105,7 +114,7 @@ export function useGameState() {
     setState((s) => ({
       ...s,
       question: q,
-      timer: TIMER_DURATION,
+      timer: currentSettings.timerDuration,
       feedback: null,
       feedbackPlayer: null,
       phase: "playing",
@@ -129,14 +138,14 @@ export function useGameState() {
         return { ...prev, timer: prev.timer - 1 };
       });
     }, 1000);
-  }, [clearTimer]);
+  }, [currentSettings.timerDuration, clearTimer]);
 
   const startGame = useCallback(() => {
     setState({
       hp: [MAX_HP, MAX_HP],
       maxHp: [MAX_HP, MAX_HP],
       question: null,
-      timer: TIMER_DURATION,
+      timer: currentSettings.timerDuration,
       combo: [0, 0],
       phase: "playing",
       winner: null,
@@ -145,7 +154,7 @@ export function useGameState() {
       shieldActive: [false, false],
     });
     setTimeout(() => nextQuestion(), 500);
-  }, [nextQuestion]);
+  }, [currentSettings.timerDuration, nextQuestion]);
 
   const submitAnswer = useCallback(
     (player: Player, answer: number) => {
@@ -178,7 +187,7 @@ export function useGameState() {
         const comboBonus = newCombo[self] >= 3 ? 5 : 0;
         let feedback = "✅ Correct!";
 
-        const fastBonus = s.timer >= TIMER_DURATION - 1 ? 3 : 0;
+        const fastBonus = s.timer >= currentSettings.timerDuration - 1 ? 3 : 0;
         if (fastBonus > 0) feedback = "⚡ Speed Bonus!";
         if (newCombo[self] >= 3) feedback = `🔥 Combo x${newCombo[self]}!`;
 
@@ -260,5 +269,9 @@ export function useGameState() {
     }
   }, [state.timer, state.phase, state.winner, nextQuestion]);
 
-  return { state, startGame, submitAnswer, nextQuestion };
+  const updateSettings = useCallback((newSettings: GameSettingsData) => {
+    setCurrentSettings(newSettings);
+  }, []);
+
+  return { state, startGame, submitAnswer, nextQuestion, currentSettings, updateSettings };
 }

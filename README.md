@@ -4,8 +4,27 @@ Game matematika 2-pemain yang seru dan cepat. Pemain berlomba menjawab soal arit
 
 Demo Game: https://mathmatch-game.vercel.app/
 
+## 🎮 Demo Gameplay
+
+### Attack Action
+![Demo Attack](/public/demo/Demo%20Case%20Attack.gif)
+
+### Heal Action  
+![Demo Heal](/public/demo/Demo%20Case%20Heal.gif)
+
+### Shield Action
+![Demo Shield](/public/demo/Demo%20Case%20Shield.gif)
+
+### Theme Mode Toggle
+![Theme Toggle](/public/demo/Change%20Theme%20Mode.gif)
+
 ## Fitur Utama
 - **2 Pemain, 1 Layar**: Dua kartu pemain dengan avatar, HP bar, dan combo indikator.
+- **Tutorial Interaktif**: Modal onboarding dengan GIF demo dan **interactive settings access** untuk pemain baru (bisa dilewati).
+- **Game Settings**: Pengaturan kustomisasi permainan:
+  - Timer duration (3-15 detik per soal)
+  - Nama pemain kustom
+  - Avatar pemain (upload foto, **camera capture langsung**, atau pilih emoji)
 - **Tiga Jenis Aksi**: `Attack (⚔️)`, `Heal (💚)`, `Shield (🛡️)` ditentukan secara acak per soal.
 - **Timer Cepat**: Setiap soal memiliki waktu 6 detik. Lambat berarti kesempatan hilang.
 - **Combo & Speed Bonus**: Jawaban beruntun benar memberi combo bonus; jawaban sangat cepat memberi speed bonus.

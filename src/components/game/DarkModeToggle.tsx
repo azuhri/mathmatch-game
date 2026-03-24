@@ -15,7 +15,7 @@ export function DarkModeToggle() {
   return (
     <button
       onClick={() => setDark((d) => !d)}
-      className="fixed top-4 right-4 z-50 text-2xl p-2 rounded-xl bg-card border-2 border-border hover:scale-110 transition-transform shadow-md"
+      className="z-50 text-2xl p-2 px-3 rounded-xl bg-card border-2 border-border hover:scale-110 transition-transform shadow-md"
       aria-label="Toggle dark mode"
     >
       {dark ? "☀️" : "🌙"}

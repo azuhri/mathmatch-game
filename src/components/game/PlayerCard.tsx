@@ -5,7 +5,7 @@ import type { Player, QuestionType } from "@/hooks/useGameState";
 import { HealthBar } from "./HealthBar";
 import { soundManager } from "@/utils/sounds";
 
-const AVATARS: Record<Player, { emoji: string; name: string }> = {
+const DEFAULT_AVATARS: Record<Player, { emoji: string; name: string }> = {
   1: { emoji: "🦊", name: "Player 1" },
   2: { emoji: "🐲", name: "Player 2" },
 };
@@ -21,6 +21,8 @@ interface PlayerCardProps {
   feedback: string | null;
   isTarget: boolean;
   questionType: QuestionType | null;
+  playerName?: string;
+  playerAvatar?: string | null;
 }
 
 export function PlayerCard({
@@ -34,6 +36,8 @@ export function PlayerCard({
   feedback,
   isTarget,
   questionType,
+  playerName,
+  playerAvatar,
 }: PlayerCardProps) {
   const [input, setInput] = useState("");
   const cardRef = useRef<HTMLDivElement>(null);
@@ -93,7 +97,9 @@ export function PlayerCard({
     if (!disabled) setInput("");
   }, [disabled]);
 
-  const avatar = AVATARS[player];
+  const defaultAvatar = DEFAULT_AVATARS[player];
+  const avatar = playerAvatar || defaultAvatar.emoji;
+  const name = playerName || defaultAvatar.name;
   const cardClass = player === 1 ? "player1-card" : "player2-card";
 
   const numButtons = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "neg", "0", "del"];
@@ -108,7 +114,15 @@ export function PlayerCard({
     >
       {/* Avatar */}
       <div className="text-6xl select-none relative">
-        {avatar.emoji}
+        {avatar.startsWith('data:') ? (
+          <img 
+            src={avatar} 
+            alt={name}
+            className="w-16 h-16 rounded-full object-cover"
+          />
+        ) : (
+          <span>{avatar}</span>
+        )}
         {shieldActive && (
           <motion.span
             className="absolute -top-2 -right-2 text-2xl"
@@ -121,7 +135,7 @@ export function PlayerCard({
       </div>
 
       <h2 className="font-display text-xl font-bold text-foreground">
-        {avatar.name}
+        {name}
       </h2>
 
       {/* Combo */}
