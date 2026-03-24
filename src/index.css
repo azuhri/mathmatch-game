@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 45 100% 96%;
+    --foreground: 240 20% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 240 20% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 20% 20%;
+
+    --primary: 250 85% 60%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 170 70% 50%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 45 30% 90%;
+    --muted-foreground: 240 10% 45%;
+
+    --accent: 35 95% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 80% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 45 30% 85%;
+    --input: 45 30% 85%;
+    --ring: 250 85% 60%;
+
+    --radius: 1rem;
+
+    /* Game-specific tokens */
+    --player1: 210 90% 55%;
+    --player1-light: 210 90% 90%;
+    --player2: 340 85% 55%;
+    --player2-light: 340 85% 90%;
+    --heal: 145 70% 45%;
+    --heal-light: 145 70% 90%;
+    --attack: 0 80% 55%;
+    --attack-light: 0 80% 90%;
+    --shield: 45 90% 50%;
+    --shield-light: 45 90% 90%;
+    --combo: 280 80% 55%;
+
+    --font-display: 'Fredoka', sans-serif;
+    --font-body: 'Nunito', sans-serif;
+  }
+
+  .dark {
+    --background: 240 20% 10%;
+    --foreground: 45 30% 92%;
+
+    --card: 240 20% 15%;
+    --card-foreground: 45 30% 92%;
+
+    --popover: 240 20% 15%;
+    --popover-foreground: 45 30% 92%;
+
+    --primary: 250 85% 65%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 170 70% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 240 15% 22%;
+    --muted-foreground: 45 15% 65%;
+
+    --accent: 35 90% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 75% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 240 15% 25%;
+    --input: 240 15% 25%;
+    --ring: 250 85% 65%;
+
+    --player1: 210 85% 60%;
+    --player1-light: 210 50% 25%;
+    --player2: 340 80% 60%;
+    --player2-light: 340 50% 25%;
+    --heal: 145 65% 50%;
+    --heal-light: 145 40% 20%;
+    --attack: 0 75% 55%;
+    --attack-light: 0 50% 20%;
+    --shield: 45 85% 55%;
+    --shield-light: 45 50% 20%;
+    --combo: 280 75% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .game-card {
+    @apply rounded-2xl border-2 p-4 shadow-lg;
+  }
+  .player1-card {
+    @apply game-card;
+    border-color: hsl(var(--player1));
+    background: hsl(var(--player1-light));
+  }
+  .player2-card {
+    @apply game-card;
+    border-color: hsl(var(--player2));
+    background: hsl(var(--player2-light));
+  }
+  .question-card {
+    @apply game-card border-primary bg-card;
+  }
+  .hp-bar-track {
+    @apply h-6 w-full rounded-full overflow-hidden;
+    background: hsl(var(--muted));
+  }
+  .hp-bar-fill {
+    @apply h-full rounded-full transition-all duration-500;
+  }
+  .game-input {
+    @apply w-full rounded-xl border-2 px-4 py-3 text-center text-2xl font-bold outline-none transition-all;
+    font-family: var(--font-display);
+  }
+  .game-input:focus {
+    @apply ring-2 ring-offset-2;
+  }
+  .player1-input {
+    @apply game-input;
+    border-color: hsl(var(--player1));
+  }
+  .player1-input:focus {
+    ring-color: hsl(var(--player1));
+  }
+  .player2-input {
+    @apply game-input;
+    border-color: hsl(var(--player2));
+  }
+  .player2-input:focus {
+    ring-color: hsl(var(--player2));
+  }
+  .feedback-text {
+    font-family: var(--font-display);
+    @apply text-4xl font-bold drop-shadow-lg;
+  }
+}
+
+@layer utilities {
+  .shake {
+    animation: shake 0.5s ease-in-out;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-4px); }
+    20%, 40%, 60%, 80% { transform: translateX(4px); }
+  }
+}
