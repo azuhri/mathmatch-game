@@ -1,8 +1,8 @@
-cat > README.md <<'EOF'
 # MathMatch — Matchmatch Battle (Vite + React + TypeScript)
 
 Game matematika 2-pemain yang seru dan cepat. Pemain berlomba menjawab soal aritmatika untuk melakukan aksi: menyerang, menyembuhkan, atau memasang perisai. Menangkan duel dengan menjatuhkan HP lawan ke 0 terlebih dahulu!
 
+Demo Game: https://mathmatch-game-guemi722g-aziszuhrip354s-projects.vercel.app
 ## Fitur Utama
 - **2 Pemain, 1 Layar**: Dua kartu pemain dengan avatar, HP bar, dan combo indikator.
 - **Tiga Jenis Aksi**: `Attack (⚔️)`, `Heal (💚)`, `Shield (🛡️)` ditentukan secara acak per soal.
