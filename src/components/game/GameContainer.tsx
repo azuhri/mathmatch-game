@@ -63,9 +63,17 @@ export function GameContainer() {
 
       <h1 className="font-display text-2xl md:text-3xl font-bold text-primary">
         ⚡ Matchmatch Battle!
+        {/* Center question */}
+        <div className="flex-1 flex flex-col items-center justify-center min-w-0 max-w-sm">
+          <QuestionBox
+            question={state.question}
+            timer={state.timer}
+            feedback={state.feedback}
+          />
+        </div>
       </h1>
 
-      <div className="w-full max-w-5xl flex flex-col md:flex-row items-center md:items-start justify-center gap-4 md:gap-8">
+      <div className="w-full max-w-5xl flex justify-between flex-col md:flex-row items-center md:items-start justify-center gap-4 md:gap-8">
         {/* Player 1 */}
         <PlayerCard
           player={1}
@@ -80,14 +88,6 @@ export function GameContainer() {
           questionType={state.feedbackPlayer === 1 ? state.question?.type ?? null : null}
         />
 
-        {/* Center question */}
-        <div className="flex-1 flex flex-col items-center justify-center min-w-0 max-w-sm">
-          <QuestionBox
-            question={state.question}
-            timer={state.timer}
-            feedback={state.feedback}
-          />
-        </div>
 
         {/* Player 2 */}
         <PlayerCard
