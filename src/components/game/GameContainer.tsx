@@ -27,7 +27,7 @@ export function GameContainer() {
           ⚡
         </motion.div>
         <h1 className="font-display text-4xl md:text-6xl font-bold text-primary text-center">
-          Math Battle!
+          Mathmatch Battle!
         </h1>
         <p className="text-lg text-muted-foreground font-body text-center max-w-md">
           2-player math showdown! Answer questions fast to attack, heal, or shield. First to drop the opponent to 0 HP wins! 🏆
@@ -62,7 +62,7 @@ export function GameContainer() {
       )}
 
       <h1 className="font-display text-2xl md:text-3xl font-bold text-primary">
-        ⚡ Math Battle!
+        ⚡ Matchmatch Battle!
       </h1>
 
       <div className="w-full max-w-5xl flex flex-col md:flex-row items-center md:items-start justify-center gap-4 md:gap-8">

@@ -1,4 +1,4 @@
-// Sound effect utilities for Math Battle
+// Sound effect utilities for Matchmatch Battle
 // All sounds are generated using Web Audio API for lightweight, license‑free SFX
 
 type SoundType = 

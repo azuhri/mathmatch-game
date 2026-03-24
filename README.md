@@ -1,5 +1,5 @@
 cat > README.md <<'EOF'
-# MathMatch — Math Battle (Vite + React + TypeScript)
+# MathMatch — Matchmatch Battle (Vite + React + TypeScript)
 
 Game matematika 2-pemain yang seru dan cepat. Pemain berlomba menjawab soal aritmatika untuk melakukan aksi: menyerang, menyembuhkan, atau memasang perisai. Menangkan duel dengan menjatuhkan HP lawan ke 0 terlebih dahulu!
 
