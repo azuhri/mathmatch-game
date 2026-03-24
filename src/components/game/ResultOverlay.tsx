@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import anime from "animejs";
 import type { Player } from "@/hooks/useGameState";
+import { soundManager } from "@/utils/sounds";
 
 interface ResultOverlayProps {
   winner: Player;
@@ -15,6 +16,11 @@ const WINNER_DATA: Record<Player, { emoji: string; name: string }> = {
 
 export function ResultOverlay({ winner, onRestart }: ResultOverlayProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const handleRestart = () => {
+    soundManager.play('button');
+    onRestart();
+  };
 
   useEffect(() => {
     // Sparkle animation
@@ -85,7 +91,7 @@ export function ResultOverlay({ winner, onRestart }: ResultOverlayProps) {
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.8 }}
-        onClick={onRestart}
+        onClick={handleRestart}
         className="font-display text-xl font-bold px-8 py-4 rounded-2xl bg-primary text-primary-foreground hover:scale-105 transition-transform shadow-lg"
       >
         🔄 Play Again!

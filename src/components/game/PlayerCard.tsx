@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import anime from "animejs";
 import type { Player, QuestionType } from "@/hooks/useGameState";
 import { HealthBar } from "./HealthBar";
+import { soundManager } from "@/utils/sounds";
 
 const AVATARS: Record<Player, { emoji: string; name: string }> = {
   1: { emoji: "🦊", name: "Player 1" },
@@ -12,6 +13,7 @@ const AVATARS: Record<Player, { emoji: string; name: string }> = {
 interface PlayerCardProps {
   player: Player;
   hp: number;
+  maxHp: number;
   combo: number;
   shieldActive: boolean;
   onSubmit: (answer: number) => void;
@@ -24,6 +26,7 @@ interface PlayerCardProps {
 export function PlayerCard({
   player,
   hp,
+  maxHp,
   combo,
   shieldActive,
   onSubmit,
@@ -66,12 +69,14 @@ export function PlayerCard({
   const handleSubmit = useCallback(() => {
     const val = parseInt(input);
     if (isNaN(val)) return;
+    soundManager.play('button');
     onSubmit(val);
     setInput("");
   }, [input, onSubmit]);
 
   const handleNumPad = useCallback((digit: string) => {
     if (disabled) return;
+    soundManager.play('button');
     if (digit === "del") {
       setInput((prev) => prev.slice(0, -1));
     } else if (digit === "neg") {
@@ -134,7 +139,7 @@ export function PlayerCard({
       </AnimatePresence>
 
       {/* HP */}
-      <HealthBar hp={hp} maxHp={100} player={player} />
+      <HealthBar hp={hp} maxHp={maxHp} player={player} />
 
       {/* Answer display */}
       <div className="w-full mt-1 rounded-lg border-2 border-border bg-card text-foreground text-center text-2xl font-bold font-display h-12 flex items-center justify-center select-none">

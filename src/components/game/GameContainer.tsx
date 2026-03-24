@@ -4,9 +4,15 @@ import { PlayerCard } from "./PlayerCard";
 import { QuestionBox } from "./QuestionBox";
 import { ResultOverlay } from "./ResultOverlay";
 import { DarkModeToggle } from "./DarkModeToggle";
+import { soundManager } from "@/utils/sounds";
 
 export function GameContainer() {
   const { state, startGame, submitAnswer } = useGameState();
+
+  const handleStart = () => {
+    soundManager.play('button');
+    startGame();
+  };
 
   if (state.phase === "waiting") {
     return (
@@ -38,7 +44,7 @@ export function GameContainer() {
         <motion.button
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.95 }}
-          onClick={startGame}
+          onClick={handleStart}
           className="font-display text-2xl font-bold px-10 py-5 rounded-2xl bg-primary text-primary-foreground shadow-lg"
         >
           🎮 Start Battle!
@@ -64,6 +70,7 @@ export function GameContainer() {
         <PlayerCard
           player={1}
           hp={state.hp[0]}
+          maxHp={state.maxHp[0]}
           combo={state.combo[0]}
           shieldActive={state.shieldActive[0]}
           onSubmit={(ans) => submitAnswer(1, ans)}
@@ -86,6 +93,7 @@ export function GameContainer() {
         <PlayerCard
           player={2}
           hp={state.hp[1]}
+          maxHp={state.maxHp[1]}
           combo={state.combo[1]}
           shieldActive={state.shieldActive[1]}
           onSubmit={(ans) => submitAnswer(2, ans)}

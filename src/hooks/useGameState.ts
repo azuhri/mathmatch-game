@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
+import { soundManager } from "@/utils/sounds";
 
 export type QuestionType = "attack" | "heal" | "shield";
 export type Player = 1 | 2;
@@ -12,6 +13,7 @@ export interface Question {
 
 export interface GameState {
   hp: [number, number];
+  maxHp: [number, number];
   question: Question | null;
   timer: number;
   combo: [number, number];
@@ -76,6 +78,7 @@ function generateQuestion(): Question {
 export function useGameState() {
   const [state, setState] = useState<GameState>({
     hp: [MAX_HP, MAX_HP],
+    maxHp: [MAX_HP, MAX_HP],
     question: null,
     timer: TIMER_DURATION,
     combo: [0, 0],
@@ -114,6 +117,7 @@ export function useGameState() {
         if (prev.timer <= 1) {
           clearInterval(timerRef.current!);
           timerRef.current = null;
+          soundManager.play('tick');
           return {
             ...prev,
             timer: 0,
@@ -121,6 +125,7 @@ export function useGameState() {
             feedbackPlayer: null,
           };
         }
+        soundManager.play('tick');
         return { ...prev, timer: prev.timer - 1 };
       });
     }, 1000);
@@ -129,6 +134,7 @@ export function useGameState() {
   const startGame = useCallback(() => {
     setState({
       hp: [MAX_HP, MAX_HP],
+      maxHp: [MAX_HP, MAX_HP],
       question: null,
       timer: TIMER_DURATION,
       combo: [0, 0],
@@ -148,6 +154,7 @@ export function useGameState() {
 
       if (answer !== q.answer) {
         // Wrong answer - break combo
+        soundManager.play('wrong');
         setState((s) => {
           const newCombo: [number, number] = [...s.combo];
           newCombo[player - 1] = 0;
@@ -161,6 +168,7 @@ export function useGameState() {
 
       setState((s) => {
         const newHp: [number, number] = [...s.hp];
+        const newMaxHp: [number, number] = [...s.maxHp];
         const newCombo: [number, number] = [...s.combo];
         const newShield: [boolean, boolean] = [...s.shieldActive];
         const opponent = player === 1 ? 1 : 0; // index
@@ -174,8 +182,18 @@ export function useGameState() {
         if (fastBonus > 0) feedback = "⚡ Speed Bonus!";
         if (newCombo[self] >= 3) feedback = `🔥 Combo x${newCombo[self]}!`;
 
+        // Play correct feedback sound
+        if (fastBonus > 0) {
+          soundManager.play('speedBonus');
+        } else if (newCombo[self] >= 3) {
+          soundManager.play('combo');
+        } else {
+          soundManager.play('correct');
+        }
+
         switch (q.type) {
           case "attack": {
+            soundManager.play('attack');
             let dmg = q.value + comboBonus + fastBonus;
             if (newShield[opponent]) {
               dmg = Math.max(0, dmg - 10);
@@ -185,11 +203,15 @@ export function useGameState() {
             break;
           }
           case "heal":
-            newHp[self] = Math.min(MAX_HP, newHp[self] + q.value + comboBonus);
+            soundManager.play('heal');
+            newHp[self] = Math.min(newMaxHp[self], newHp[self] + q.value + comboBonus);
             break;
           case "shield":
+            soundManager.play('shield');
             newShield[self] = true;
-            newHp[self] = Math.min(MAX_HP, newHp[self] + q.value);
+            // Increase maxHp by shield value and heal to that new max
+            newMaxHp[self] += q.value;
+            newHp[self] = Math.min(newMaxHp[self], newHp[self] + q.value);
             break;
         }
 
@@ -197,10 +219,12 @@ export function useGameState() {
         if (q.type === "attack") newCombo[opponent] = 0;
 
         const winner = newHp[0] <= 0 ? 2 : newHp[1] <= 0 ? 1 : null;
+        if (winner) soundManager.play('gameOver');
 
         return {
           ...s,
           hp: newHp,
+          maxHp: newMaxHp,
           combo: newCombo,
           shieldActive: newShield,
           feedback,
